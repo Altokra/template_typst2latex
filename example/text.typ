@@ -1,0 +1,1 @@
+#text(black)[  *Consider only abrupt junctions with uniform doping in each region | 仅考虑每个区域中均匀掺杂的突然性接合点*]
