@@ -1,0 +1,282 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ZJU experiment report template
+%% LaTeX version aligned with the original Typst template.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{zjureport}[2026/04/29 ZJU experiment report template]
+
+\RequirePackage[left=2.50cm,right=2.50cm,top=2.50cm,bottom=2.50cm]{geometry}
+\RequirePackage{amsmath,amssymb,bm}
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{caption}
+\RequirePackage{enumitem}
+\RequirePackage{eso-pic}
+\RequirePackage{fancyhdr}
+\RequirePackage{float}
+\RequirePackage{fontspec}
+\RequirePackage{graphicx}
+\RequirePackage{hyperref}
+\RequirePackage{listings}
+\RequirePackage{tabularx}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{xcolor}
+\RequirePackage{xparse}
+
+\graphicspath{{./}{images/}{figures/}}
+
+\hypersetup{
+  unicode=true,
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue,
+  bookmarksnumbered=true
+}
+
+\setmainfont{Times New Roman}
+\setmonofont{Consolas}
+\setCJKmainfont{SimSun}[AutoFakeBold=true]
+\setCJKsansfont{Microsoft YaHei}
+\setCJKmonofont{SimSun}
+
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.35em}
+\setlength{\headheight}{21pt}
+\linespread{1.25}
+\captionsetup{font=small,labelfont=bf,labelsep=quad}
+\setlist{nosep,leftmargin=2em}
+
+\def\equationautorefname{式}
+\def\figureautorefname{图}
+\def\tableautorefname{表}
+\def\sectionautorefname{节}
+\def\subsectionautorefname{小节}
+
+\makeatletter
+\newcommand\dlmu[2][4cm]{\hskip1pt\underline{\hb@xt@ #1{\hss#2\hss}}\hskip3pt}
+\makeatother
+
+\ExplSyntaxOn
+\tl_new:N \g_zju_cover_name_tl
+\tl_new:N \g_zju_cover_subtitle_tl
+\tl_new:N \g_zju_title_tl
+\tl_new:N \g_zju_course_tl
+\tl_new:N \g_zju_semester_tl
+\tl_new:N \g_zju_author_tl
+\tl_new:N \g_zju_school_id_tl
+\tl_new:N \g_zju_college_tl
+\tl_new:N \g_zju_major_tl
+\tl_new:N \g_zju_teacher_tl
+\tl_new:N \g_zju_place_tl
+\tl_new:N \g_zju_date_tl
+\tl_new:N \g_zju_project_name_tl
+\tl_new:N \g_zju_experiment_type_tl
+\tl_new:N \g_zju_groupmate_tl
+\tl_new:N \g_zju_grade_tl
+
+\tl_gset:Nn \g_zju_cover_name_tl {本科实验报告}
+\tl_gset:Nn \g_zju_cover_subtitle_tl {Undergraduate Lab Report}
+\tl_gset:Nn \g_zju_title_tl {实验报告标题}
+\tl_gset:Nn \g_zju_course_tl {课程名称}
+\tl_gset:Nn \g_zju_semester_tl {}
+\tl_gset:Nn \g_zju_author_tl {姓名}
+\tl_gset:Nn \g_zju_school_id_tl {学号}
+\tl_gset:Nn \g_zju_college_tl {学院}
+\tl_gset:Nn \g_zju_major_tl {专业}
+\tl_gset:Nn \g_zju_teacher_tl {指导教师}
+\tl_gset:Nn \g_zju_place_tl {实验地点}
+\tl_gset:Nn \g_zju_date_tl {\today}
+\tl_gset:Nn \g_zju_project_name_tl {实验名称}
+\tl_gset:Nn \g_zju_experiment_type_tl {设计型实验}
+\tl_gset:Nn \g_zju_groupmate_tl {}
+\tl_gset:Nn \g_zju_grade_tl {}
+
+\keys_define:nn { zjureport }
+  {
+    cover-name .tl_gset:N = \g_zju_cover_name_tl,
+    cover-subtitle .tl_gset:N = \g_zju_cover_subtitle_tl,
+    title .tl_gset:N = \g_zju_title_tl,
+    course .tl_gset:N = \g_zju_course_tl,
+    semester .tl_gset:N = \g_zju_semester_tl,
+    author .tl_gset:N = \g_zju_author_tl,
+    school-id .tl_gset:N = \g_zju_school_id_tl,
+    college .tl_gset:N = \g_zju_college_tl,
+    major .tl_gset:N = \g_zju_major_tl,
+    teacher .tl_gset:N = \g_zju_teacher_tl,
+    place .tl_gset:N = \g_zju_place_tl,
+    date .tl_gset:N = \g_zju_date_tl,
+    project-name .tl_gset:N = \g_zju_project_name_tl,
+    experiment-type .tl_gset:N = \g_zju_experiment_type_tl,
+    groupmate .tl_gset:N = \g_zju_groupmate_tl,
+    grade .tl_gset:N = \g_zju_grade_tl,
+  }
+
+\NewDocumentCommand{\zjusetup}{m}{\keys_set:nn { zjureport } {#1}}
+\NewDocumentCommand{\zjumetadata}{m}{\zjusetup{#1}}
+\NewDocumentCommand{\zjuval}{m}{\tl_use:c { g_zju_#1_tl }}
+\ExplSyntaxOff
+
+% Direct port of Typst binding_line_background().
+\newif\ifzjubindingline
+\zjubindinglinefalse
+\newcommand{\enablebindingline}{\zjubindinglinetrue}
+\newcommand{\disablebindingline}{\zjubindinglinefalse}
+\newcommand{\zjubindingline}{%
+  \ifzjubindingline
+    \begin{tikzpicture}[remember picture,overlay]
+      \draw[black!70,dashed,line width=1pt]
+        ([xshift=1.15cm,yshift=-2.5cm]current page.north west)
+        -- ([xshift=1.15cm,yshift={-(14.35cm - 1.75em - 0.3cm)}]current page.north west);
+      \node[
+        anchor=north,
+        align=center,
+        text=black!70,
+        font=\bfseries\fontsize{14pt}{16pt}\selectfont,
+        inner sep=0pt
+      ] at ([xshift=1.15cm,yshift={-(14.65cm - 1.75em)}]current page.north west)
+        {装\\[0.2em]订\\[0.2em]线};
+      \draw[black!70,dashed,line width=1pt]
+        ([xshift=1.15cm,yshift={-(14.35cm + 1.75em + 1.8cm)}]current page.north west)
+        -- ([xshift=1.15cm,yshift={-(28.7cm)}]current page.north west);
+    \end{tikzpicture}%
+  \fi
+}
+\AddToShipoutPictureBG{\zjubindingline}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\fontsize{9pt}{11pt}\selectfont 实验名称：\zjuval{project_name}}
+\fancyhead[C]{\fontsize{9pt}{11pt}\selectfont 姓名：\zjuval{author}}
+\fancyhead[R]{\fontsize{9pt}{11pt}\selectfont 学号：\zjuval{school_id}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\NewDocumentCommand{\zjuunderline}{O{4cm}m}{\underline{\makebox[#1][c]{#2}}}
+
+\newcommand{\zjucover}{
+  \thispagestyle{empty}
+  \begin{center}
+    \vspace*{\fill}
+    \includegraphics[width=\textwidth]{ZJU-Banner2.png}
+
+    \vspace{0.5cm}
+    {\heiti\fontsize{26pt}{32pt}\selectfont \zjuval{cover_name}\par}
+    \vspace{0.5cm}
+    {\fontsize{17pt}{22pt}\selectfont \zjuval{cover_subtitle}\par}
+
+    \vspace*{\fill}
+    \begingroup
+    \fontsize{14.5pt}{22pt}\selectfont
+    \renewcommand{\arraystretch}{1.45}
+    \begin{tabular}{@{}>{\centering\arraybackslash}p{6.5em}>{\centering\arraybackslash}p{8cm}@{}}
+      课程名称： & \zjuunderline[8cm]{\zjuval{course}}\\
+      实验名称： & \zjuunderline[8cm]{\zjuval{project_name}}\\
+      姓\quad\quad 名： & \zjuunderline[8cm]{\zjuval{author}}\\
+      学\quad\quad 号： & \zjuunderline[8cm]{\zjuval{school_id}}\\
+      学\quad\quad 院： & \zjuunderline[8cm]{\zjuval{college}}\\
+      专\quad\quad 业： & \zjuunderline[8cm]{\zjuval{major}}\\
+      实验地点： & \zjuunderline[8cm]{\zjuval{place}}\\
+      指导教师： & \zjuunderline[8cm]{\zjuval{teacher}}\\
+      报告日期： & \zjuunderline[8cm]{\zjuval{date}}
+    \end{tabular}
+    \endgroup
+
+    \vspace*{\fill}
+  \end{center}
+  \clearpage
+}
+\newcommand{\cover}{\zjucover}
+
+\newcommand{\zjulabheader}{
+  \begingroup
+  \fontsize{9.5pt}{12pt}\selectfont
+  \setlength{\tabcolsep}{0pt}
+  \renewcommand{\arraystretch}{1.15}
+  \begin{center}
+    \begin{tabularx}{\textwidth}{@{}X@{\hfill}p{5.5cm}@{}}
+      \centering\includegraphics[width=\linewidth]{head.jpg} &
+      \centering
+      \begin{tabular}{@{}p{1.5cm}p{4cm}@{}}
+        专业： & \zjuunderline[4cm]{\zjuval{major}}\\
+        姓名： & \zjuunderline[4cm]{\zjuval{author}}\\
+        学号： & \zjuunderline[4cm]{\zjuval{school_id}}\\
+        日期： & \zjuunderline[4cm]{\zjuval{date}}\\
+        地点： & \zjuunderline[4cm]{\zjuval{place}}
+      \end{tabular}
+    \end{tabularx}
+
+    \vspace{0.25em}
+    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.12\textwidth}
+                    >{\centering\arraybackslash}p{0.20\textwidth}
+                    >{\raggedright\arraybackslash}p{0.12\textwidth}
+                    >{\centering\arraybackslash}p{0.25\textwidth}
+                    >{\raggedright\arraybackslash}p{0.16\textwidth}
+                    >{\centering\arraybackslash}p{0.14\textwidth}@{}}
+      课程名称： & \zjuval{course} &
+      指导老师： & \zjuval{teacher} &
+      成\quad\quad 绩： & \zjuval{grade}\\[-0.15em]
+      \cline{2-2}\cline{4-4}\cline{6-6}
+      实验名称： & \zjuval{project_name} &
+      实验类型： & \zjuval{experiment_type} &
+      同组学生姓名： & \zjuval{groupmate}\\[-0.15em]
+      \cline{2-2}\cline{4-4}\cline{6-6}
+    \end{tabular}
+  \end{center}
+  \endgroup
+  \vspace{1em}
+}
+
+\NewDocumentCommand{\ISEEHeader}{O{}}{
+  \zjusetup{#1}
+  \enablebindingline
+  \zjulabheader
+}
+
+\newtcolorbox{zjubox}[2][]{
+  enhanced,
+  breakable,
+  colback=#2!6,
+  colframe=#2!65!black,
+  boxrule=0.6pt,
+  arc=1mm,
+  left=1em,
+  right=1em,
+  top=0.75em,
+  bottom=0.75em,
+  #1
+}
+
+\NewDocumentCommand{\tbox}{m}{\begin{zjubox}{gray}#1\end{zjubox}}
+\NewDocumentCommand{\notebox}{m}{\begin{zjubox}[title=Note]{blue}#1\end{zjubox}}
+\NewDocumentCommand{\importantbox}{m}{\begin{zjubox}[title=Important]{green}#1\end{zjubox}}
+\NewDocumentCommand{\warningbox}{m}{\begin{zjubox}[title=Warning]{orange}#1\end{zjubox}}
+\NewDocumentCommand{\questionbox}{m}{\begin{zjubox}[title=Question]{purple}#1\end{zjubox}}
+
+\lstdefinestyle{zjucode}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  commentstyle=\color{gray!80!black},
+  stringstyle=\color{red!60!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=0.8em,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  rulecolor=\color{gray!45},
+  backgroundcolor=\color{gray!6},
+  tabsize=2
+}
+\lstset{style=zjucode}
+\lstnewenvironment{codeblock}[1][]{\lstset{style=zjucode,#1}}{}
+\NewDocumentCommand{\codex}{O{}m}{\lstinputlisting[style=zjucode,#1]{#2}}
+\NewDocumentCommand{\mycode}{O{}m}{\lstinputlisting[style=zjucode,#1]{#2}}
+
+\newcommand{\reference}{
+  \nocite{0Isaac}
+  \bibliographystyle{unsrt}
+  \bibliography{reference}
+}

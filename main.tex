@@ -1,0 +1,100 @@
+%!TeX program = xelatex
+\documentclass[12pt,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+
+\zjusetup{
+  cover-name = {本科实验报告},
+  cover-subtitle = {Undergraduate Lab Report},
+  title = {Arduino 基础实验},
+  course = {电子电路设计实验 II},
+  semester = {2025-2026 学年第一学期},
+  author = {张三},
+  school-id = {2021123456},
+  college = {信息与电子工程学院},
+  major = {微电子科学与工程},
+  teacher = {施红军、叶险峰、邓婧婧},
+  place = {东四 216},
+  date = {\today},
+  project-name = {Arduino 基本实验},
+  experiment-type = {设计型实验},
+  groupmate = {无}
+}
+
+\begin{document}
+
+\cover
+
+\tableofcontents
+\clearpage
+
+\ISEEHeader
+
+\section{实验目的}
+
+在这里填写实验目的。该入口文件已经使用仓库中提供的模板，封面、页眉、
+实验表头和常用排版组件均由 \path{zjureport.sty} 统一控制。
+
+\section{实验原理}
+
+行内公式示例：$v-\varepsilon+\phi=2$。行间公式如\autoref{eq:euler}：
+\begin{equation}
+  v-\varepsilon+\phi=2
+  \label{eq:euler}
+\end{equation}
+
+\importantbox{
+  这是从 Typst 模板中的 Important/Note 风格迁移来的提示框，可用于放置
+  实验注意事项、关键结论或评分要求。
+}
+
+\section{实验内容}
+
+\subsection{图片}
+
+插图示例如\autoref{fig:zju-logo} 所示。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.35\textwidth]{figures/zju_logo.png}
+  \caption{浙江大学校徽}
+  \label{fig:zju-logo}
+\end{figure}
+
+\subsection{表格}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ll}
+    \toprule
+    文件 & 说明 \\
+    \midrule
+    \texttt{main.tex} & 报告正文入口 \\
+    \texttt{zjureport.sty} & 模板样式与命令定义 \\
+    \texttt{reference.bib} & 参考文献数据库 \\
+    \bottomrule
+  \end{tabular}
+  \caption{LaTeX 模板文件组成}
+  \label{tab:files}
+\end{table}
+
+\subsection{代码}
+
+\begin{lstlisting}[language=C,caption={LED 闪烁示例}]
+int main(void) {
+  while (1) {
+    toggle_led();
+    delay_ms(500);
+  }
+}
+\end{lstlisting}
+
+\section{实验结果与分析}
+
+在这里填写实验结果、波形截图、误差分析和思考题回答。
+
+\section{结论}
+
+在这里填写实验结论。
+
+\reference
+
+\end{document}
