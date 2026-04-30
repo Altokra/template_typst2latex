@@ -121,6 +121,19 @@
 % Direct port of Typst binding_line_background().
 \newif\ifzjubindingline
 \zjubindinglinefalse
+\newsavebox{\zjubindinglinebox}
+% Pre-typeset the label once so shipout hooks never reparse CJK text after listings.
+\AtBeginDocument{%
+  \sbox{\zjubindinglinebox}{%
+    \color{black!70}%
+    \bfseries\fontsize{14pt}{16pt}\selectfont
+    \begin{tabular}{@{}c@{}}
+      装\\[0.2em]
+      订\\[0.2em]
+      线
+    \end{tabular}%
+  }%
+}
 \newcommand{\enablebindingline}{\zjubindinglinetrue}
 \newcommand{\disablebindingline}{\zjubindinglinefalse}
 \newcommand{\zjubindingline}{%
@@ -144,6 +157,30 @@
   \fi
 }
 \AddToShipoutPictureBG{\zjubindingline}
+% Keep the shipout background zero-sized and reuse the saved label box.
+\renewcommand{\zjubindingline}{%
+  \ifzjubindingline
+    \AtPageLowerLeft{%
+      \put(0,0){%
+        \makebox(0,0)[lb]{%
+          \begin{tikzpicture}[remember picture,overlay]
+            \draw[black!70,dashed,line width=1pt]
+              ([xshift=1.15cm,yshift=-2.5cm]current page.north west)
+              -- ([xshift=1.15cm,yshift={-(14.35cm - 1.75em - 0.3cm)}]current page.north west);
+            \node[
+              anchor=north,
+              inner sep=0pt
+            ] at ([xshift=1.15cm,yshift={-(14.65cm - 1.75em)}]current page.north west)
+              {\usebox{\zjubindinglinebox}};
+            \draw[black!70,dashed,line width=1pt]
+              ([xshift=1.15cm,yshift={-(14.35cm + 1.75em + 1.8cm)}]current page.north west)
+              -- ([xshift=1.15cm,yshift={-(28.7cm)}]current page.north west);
+          \end{tikzpicture}%
+        }%
+      }%
+    }%
+  \fi
+}
 
 \pagestyle{fancy}
 \fancyhf{}

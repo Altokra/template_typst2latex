@@ -2,7 +2,7 @@
  * @Author: ka1shu1 cwh979946@163.com
  * @Date: 2026-04-29 14:47:19
  * @LastEditors: ka1shu1 cwh979946@163.com
- * @LastEditTime: 2026-04-29 16:21:17
+ * @LastEditTime: 2026-04-30 14:35:51
  * @FilePath: \template_typst2latex\README.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -43,6 +43,55 @@ xelatex main.tex
 bibtex main
 xelatex main.tex
 xelatex main.tex
+```
+
+## 更新
+
+### 04-30-2026
+问题现象：
+
+- 模板中装订线原本通过页面背景层绘制。
+- 当正文包含 `lstlisting` 代码块，且代码中出现 `handleButton()` 等 token 时，某一页装订线文字被错误替换为 `handleButton / handleButton / handleButton`。
+- 尝试直接在 TikZ node 或 `eso-pic` 背景中写 `装\\订\\线`，问题仍可能出现。
+- 一次中间修复还导致 PDF 被查看器误判为横向，原因是背景绘制对象没有完全限制为零尺寸覆盖层。
+
+最终解决方案：
+
+1. 将装订线文字预先保存为独立盒子：
+
+```tex
+\newsavebox{\zjubindinglinebox}
+\AtBeginDocument{%
+  \sbox{\zjubindinglinebox}{%
+    \color{black!70}%
+    \bfseries\fontsize{14pt}{16pt}\selectfont
+    \begin{tabular}{@{}c@{}}
+      装\\[0.2em]
+      订\\[0.2em]
+      线
+    \end{tabular}%
+  }%
+}
+```
+
+2. 在每页背景中只复用盒子，不重新解析文字：
+
+```tex
+\put(\LenToUnit{1.15cm},\LenToUnit{14.85cm}){%
+  \makebox(0,0){\usebox{\zjubindinglinebox}}%
+}%
+```
+
+3. 将背景绘制包裹成零尺寸对象，避免影响页面方向：
+
+```tex
+\AtPageLowerLeft{%
+  \put(0,0){%
+    \makebox(0,0)[lb]{%
+      ...
+    }%
+  }%
+}
 ```
 
 
