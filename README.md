@@ -1,11 +1,3 @@
-<!--
- * @Author: ka1shu1 cwh979946@163.com
- * @Date: 2026-04-29 14:47:19
- * @LastEditors: ka1shu1 cwh979946@163.com
- * @LastEditTime: 2026-04-30 14:35:51
- * @FilePath: \template_typst2latex\README.md
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 # ZJU LaTeX 实验报告模板
 
 这是一个浙江大学实验报告 LaTeX 模板，已迁移自原 Typst 实验报告样式。模板包含封面、目录、页眉、信息与电子工程学院实验表头、装订线、提示框、代码块、图片、表格和参考文献示例。

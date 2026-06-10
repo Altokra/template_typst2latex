@@ -2,31 +2,42 @@
 \documentclass[12pt,a4paper,UTF8]{ctexart}
 \usepackage{zjureport}
 
+
 \zjusetup{
   cover-name = {本科实验报告},
-  cover-subtitle = {Undergraduate Lab Report},
-  title = {Arduino 基础实验},
+% cover-subtitle = {Undergraduate Lab Report},
   course = {电子电路设计实验 II},
-  semester = {2025-2026 学年第一学期},
   author = {张三},
   school-id = {2021123456},
   college = {信息与电子工程学院},
   major = {微电子科学与工程},
   teacher = {施红军、叶险峰、邓婧婧},
   place = {东四 216},
-  date = {\today},
+  date = {2026 年 6 月 3 日}, %封面日期。这里空着的话效果为“20   年   月   日”
+  header-date = {2026.6.3},  %抬头日期
   project-name = {Arduino 基本实验},
   experiment-type = {设计型实验},
   groupmate = {无}
 }
 
+%%---------------------------正文开始---------------------------%%
 \begin{document}
 
+%%--------------------封面--------------------%%
 \cover
 
-\tableofcontents
-\clearpage
+%%---------------摘要---------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
 
+%%---------------目录---------------%%
+%\tableofcontents
+%\clearpage
+
+%%---------------抬头---------------%%
 \ISEEHeader
 
 \section{实验目的}
