@@ -96,11 +96,11 @@
 \tl_gset:Nn \g_zju_school_id_tl {学号}
 \tl_gset:Nn \g_zju_college_tl {学院}
 \tl_gset:Nn \g_zju_major_tl {专业}
-\tl_gset:Nn \g_zju_teacher_tl {指导教师}
+\tl_gset:Nn \g_zju_teacher_tl {}
 \tl_gset:Nn \g_zju_place_tl {实验地点}
 \tl_gset:Nn \g_zju_date_tl {20\hspace{1.2cm}年\hspace{0.9cm}月\hspace{0.9cm}日}
 \tl_gset:Nn \g_zju_header_date_tl {\today}
-\tl_gset:Nn \g_zju_project_name_tl {实验名称}
+\tl_gset:Nn \g_zju_project_name_tl {}
 \tl_gset:Nn \g_zju_experiment_type_tl {设计型实验}
 \tl_gset:Nn \g_zju_groupmate_tl {}
 
@@ -138,7 +138,7 @@
 \AtBeginDocument{%
   \sbox{\zjubindinglinebox}{%
     \color{black!70}%
-    \bfseries\fontsize{12pt}{14pt}\selectfont
+    \bfseries\fontsize{12pt}{14pt}\selectfont%
     \begin{tabular}{@{}c@{}}
       装\\[0.2em]
       订\\[0.2em]
@@ -196,24 +196,24 @@
 \newsavebox{\zjuheaderprojectbox}
 \NewDocumentCommand{\zjuheaderfit}{m}{%
   \sbox{\zjuheaderfieldbox}{\strut #1}%
-  \ifdim\wd\zjuheaderfieldbox>\linewidth
+  \ifdim\wd\zjuheaderfieldbox>\linewidth%
     \resizebox{\linewidth}{!}{\usebox{\zjuheaderfieldbox}}%
-  \else
+  \else%
     \makebox[\linewidth][c]{\usebox{\zjuheaderfieldbox}}%
-  \fi
+  \fi%
 }
 \NewDocumentCommand{\zjuheaderunderline}{m}{%
   \sbox{\zjuheaderfieldbox}{\strut #1}%
   \underline{%
     \ifdim\wd\zjuheaderfieldbox>\linewidth
       \resizebox{\linewidth}{!}{\usebox{\zjuheaderfieldbox}}%
-    \else
+    \else%
       \makebox[\linewidth][c]{\usebox{\zjuheaderfieldbox}}%
-    \fi
+    \fi%
   }%
 }
 
-%%封面设置
+%% 封面设置
 \newcommand{\zjucover}{
   \thispagestyle{empty}
   \begin{center}
@@ -246,7 +246,7 @@
 }
 \newcommand{\cover}{\zjucover}
 
-%% 首页抬头
+%% 首页表头
 \newcommand{\zjulabheader}{
   \begingroup
   \fontsize{9.5pt}{12pt}\selectfont
@@ -272,19 +272,20 @@
     % ===== 下半部分 =====
     \setlength{\tabcolsep}{0pt}
     \renewcommand{\arraystretch}{1.25}
-    \sbox{\zjuheaderprojectbox}{\strut\zjuval{project_name}}%
+    \sbox{\zjuheaderprojectbox}{\strut\zjuval{project_name}}
 
     \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.10\textwidth}
-                    >{\centering\arraybackslash}p{0.22\textwidth}
-                    >{\raggedright\arraybackslash}p{0.10\textwidth}
                     >{\centering\arraybackslash}p{0.27\textwidth}
+                    >{\raggedright\arraybackslash}p{0.10\textwidth}
+                    >{\centering\arraybackslash}p{0.26\textwidth}
                     >{\raggedright\arraybackslash}p{0.14\textwidth}
-                    >{\centering\arraybackslash}p{0.16\textwidth}@{}}
+                    >{\centering\arraybackslash}p{0.12\textwidth}@{}}
       课程名称： & \zjuheaderfit{\zjuval{course}} &
       指导教师： & \zjuheaderfit{\zjuval{teacher}} &
       成\quad\quad 绩： & \\[-0.15em]
       \cline{2-2}\cline{4-4}\cline{6-6}
-      \ifdim\wd\zjuheaderprojectbox>0.22\textwidth
+      % ===== 换行 =====
+      \ifdim\wd\zjuheaderprojectbox>0.27\textwidth%
         实验名称：&
         \multicolumn{3}{>{\centering\arraybackslash}p{0.57\textwidth}}{\zjuheaderfit{\zjuval{project_name}}} &
         实验类型：& \zjuheaderfit{\zjuval{experiment_type}}\\[-0.15em]
@@ -292,12 +293,12 @@
         & & & &
         同组学生姓名：& \zjuheaderfit{\zjuval{groupmate}}\\[-0.15em]
         \cline{6-6}
-      \else
+      \else%
         实验名称：& \zjuheaderfit{\zjuval{project_name}} &
         实验类型：& \zjuheaderfit{\zjuval{experiment_type}} &
         同组学生姓名：& \zjuheaderfit{\zjuval{groupmate}}\\[-0.15em]
         \cline{2-2}\cline{4-4}\cline{6-6}
-      \fi
+      \fi%
     \end{tabular}
 
   \end{center}

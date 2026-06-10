@@ -1,97 +1,59 @@
 # ZJU LaTeX 实验报告模板
 
-这是一个浙江大学实验报告 LaTeX 模板，已迁移自原 Typst 实验报告样式。模板包含封面、目录、页眉、信息与电子工程学院实验表头、装订线、提示框、代码块、图片、表格和参考文献示例。
+这是一个浙江大学实验报告 LaTeX 模板，从原 Typst 实验报告样式修改而来。
 
 ## 文件结构
 
 ```text
-├── main.tex          # 报告正文入口
-├── zjureport.sty     # 模板样式文件
-├── reference.bib     # BibTeX 参考文献
-├── images/           # 封面与实验表头图片
-└── figures/          # 正文示例图片
+├── main.tex          # 正文
+├── zjureport.sty     # 模板样式
+├── reference.bib     # 参考文献
+└── figures/          # 图片
 ```
 
 ## 使用方法
 
-在 `main.tex` 顶部修改 `\zjusetup{...}` 中的课程、姓名、学号、学院、专业、教师、地点、实验名称等字段，然后编写正文即可。
+在 `main.tex` 顶部修改 `\zjusetup{...}` 中的课程名称 *course*、姓名 *author*、学号 *school-id*、专业 *major* 等字段，然后编写正文即可。
 
 常用命令：
 
 - `\cover`：生成封面。
 - `\tableofcontents`：生成目录。
 - `\ISEEHeader`：生成实验报告表头，并从正文开始显示装订线。
-- `\disablebindingline` / `\enablebindingline`：手动关闭或开启装订线。
-- `\importantbox{...}`、`\notebox{...}`、`\warningbox{...}`：提示框。
-- `lstlisting`：代码块。
-- `\reference`：生成 BibTeX 参考文献。
+
+注：这里的表头采用列表方式, 为了解决有时实验名称过长的问题, 使用了一个判断逻辑自动换行，效果如下
+
+![换行](figures\newline.png)
+
+不过在我这届电设还是交纸质稿，如果交纸质稿的话建议手写, 把 `\zjusetup{···}` 中相应字段删去即可, 调整排版不是一件愉悦的事。
+
+- `\importantbox{...}`、`\notebox{...}`、`\warningbox{...}`：提示框,我一般不使用, 可在 `zjureport.sty` 中自行修改样式。
+- `lstlisting`：代码块, 采用了我常用的格式, 亦可在 `zjureport.sty` 中自行修改样式。
+
 
 ## 编译
 
-推荐使用 XeLaTeX：
+推荐使用 XeLaTeX
 
-```bash
-xelatex main.tex
-bibtex main
-xelatex main.tex
-xelatex main.tex
-```
 
 ## 更新
 
-### 04-30-2026
-问题现象：
+### 2026-04-30
 
-- 模板中装订线原本通过页面背景层绘制。
-- 当正文包含 `lstlisting` 代码块，且代码中出现 `handleButton()` 等 token 时，某一页装订线文字被错误替换为 `handleButton / handleButton / handleButton`。
-- 尝试直接在 TikZ node 或 `eso-pic` 背景中写 `装\\订\\线`，问题仍可能出现。
-- 一次中间修复还导致 PDF 被查看器误判为横向，原因是背景绘制对象没有完全限制为零尺寸覆盖层。
+解决代码块影响装订线显示的问题
 
-最终解决方案：
+### 2026-06-10
 
-1. 将装订线文字预先保存为独立盒子：
+`\section{}` 的编号改为中文大写数字并左对齐, 更符合实验报告样式。
 
-```tex
-\newsavebox{\zjubindinglinebox}
-\AtBeginDocument{%
-  \sbox{\zjubindinglinebox}{%
-    \color{black!70}%
-    \bfseries\fontsize{14pt}{16pt}\selectfont
-    \begin{tabular}{@{}c@{}}
-      装\\[0.2em]
-      订\\[0.2em]
-      线
-    \end{tabular}%
-  }%
-}
-```
-
-2. 在每页背景中只复用盒子，不重新解析文字：
-
-```tex
-\put(\LenToUnit{1.15cm},\LenToUnit{14.85cm}){%
-  \makebox(0,0){\usebox{\zjubindinglinebox}}%
-}%
-```
-
-3. 将背景绘制包裹成零尺寸对象，避免影响页面方向：
-
-```tex
-\AtPageLowerLeft{%
-  \put(0,0){%
-    \makebox(0,0)[lb]{%
-      ...
-    }%
-  }%
-}
-```
+增加了注释, 方便阅读修改; 略微修改了一部分冗余代码。
 
 
 ## 参考
 
 [typst版本](https://github.com/xw-Soleil/ReportTemplate_Soleil) 
 
-[cc98](https://www.cc98.org/topic/6346287)
+[typst版本cc98](https://www.cc98.org/topic/6346287)
 
 ---
 [latex报告模板](https://cn.overleaf.com/latex/templates/zhe-jiang-da-xue-ke-cheng-lun-wen-mo-ban/mjpzqvgsmdzn)
